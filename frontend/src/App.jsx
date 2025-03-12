@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate, Link } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import AuthPage from "./components/AuthPage";
 import PatientDashboard from "./components/PatientDashboard";
 import PatientClaimForm from "./components/PatientClaimForm";
 import InsurerDashboard from "./components/InsurerDashboard";
@@ -18,87 +17,48 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  ThemeProvider,
-  createTheme,
   CssBaseline,
+  useScrollTrigger,
 } from "@mui/material";
 import { AccountCircle, Dashboard } from "@mui/icons-material";
 
-// Create a custom theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1976d2",
-      light: "#42a5f5",
-      dark: "#1565c0",
+// Scroll-triggered shrink effect
+function ElevationScroll({ children }) {
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 10,
+  });
+
+  return React.cloneElement(children, {
+    sx: {
+      transition: "all 0.3s ease",
+      backdropFilter: "blur(12px)",
+      backgroundColor: trigger
+        ? "rgba(255, 255, 255, 0.2)" // Background on scroll
+        : "transparent", // Fully transparent at start
+      padding: trigger ? "8px 0" : "16px 0",
+      boxShadow: trigger ? "0px 4px 12px rgba(0, 0, 0, 0.1)" : "none",
     },
-    secondary: {
-      main: "#ff9800",
-      light: "#ffb74d",
-      dark: "#f57c00",
-    },
-  },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontWeight: 500,
-    },
-    h2: {
-      fontWeight: 500,
-    },
-    h3: {
-      fontWeight: 500,
-    },
-    h4: {
-      fontWeight: 500,
-    },
-    h5: {
-      fontWeight: 500,
-    },
-    h6: {
-      fontWeight: 500,
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: "none",
-          fontWeight: 500,
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: "0 4px 20px 0 rgba(0,0,0,0.12)",
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-        },
-      },
-    },
-  },
-});
+  });
+}
 
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
   const open = Boolean(anchorEl);
+
+  const location = useLocation(); // Get current route
+
+  // Define background only for landing page
+  const isLandingPage = location.pathname === "/";
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
     if (storedUser && storedToken) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
+      setUser(JSON.parse(storedUser));
       setToken(storedToken);
     }
   }, []);
@@ -120,22 +80,44 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
-      <Box
-        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
-      >
-        <AppBar position="static" elevation={1}>
+      <ElevationScroll>
+        <AppBar
+          position="fixed"
+          elevation={0}
+          sx={{
+            borderRadius: "12px",
+            margin: "10px auto",
+            maxWidth: "95%",
+            transition: "all 0.3s ease-in-out",
+            backdropFilter: "blur(12px)",
+            backgroundColor: isHovered
+              ? "rgba(255, 255, 255, 0.3)"
+              : "rgba(255, 255, 255, 0.2)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            boxShadow: isHovered ? "0px 4px 20px rgba(0, 0, 0, 0.15)" : "none",
+            "&:hover": {
+              backdropFilter: "blur(18px)",
+              backgroundColor: "rgba(255, 255, 255, 0.4)",
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+            },
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <Container maxWidth="lg">
             <Toolbar>
+              {/* Logo & Title */}
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
                 <Link
                   to={user ? "/dashboard" : "/"}
                   style={{
                     textDecoration: "none",
-                    color: "inherit",
+                    color: "#fff",
                     display: "flex",
                     alignItems: "center",
+                    fontWeight: "bold",
                   }}
                 >
                   <Dashboard sx={{ mr: 1 }} />
@@ -143,7 +125,39 @@ function App() {
                 </Link>
               </Typography>
 
-              {user ? (
+              {/* Login & Signup buttons only when not logged in */}
+              {!user && (
+                <>
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/login"
+                    sx={{ mr: 1, fontWeight: "bold" }}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      fontWeight: "bold",
+                      background:
+                        "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
+                      color: "#000",
+                      "&:hover": {
+                        background:
+                          "linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)",
+                      },
+                    }}
+                    component={Link}
+                    to="/register"
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              )}
+
+              {/* Always show nav buttons when logged in */}
+              {user && (
                 <>
                   <Button
                     color="inherit"
@@ -163,121 +177,102 @@ function App() {
                       Submit Claim
                     </Button>
                   )}
+
+                  {/* Profile Avatar & Dropdown */}
                   <IconButton
                     size="large"
                     edge="end"
                     color="inherit"
-                    aria-label="account"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
                     onClick={handleMenu}
                   >
-                    <Avatar
-                      sx={{ width: 32, height: 32, bgcolor: "secondary.main" }}
-                    >
+                    <Avatar sx={{ bgcolor: "secondary.main" }}>
                       {user.email.charAt(0).toUpperCase()}
                     </Avatar>
                   </IconButton>
                   <Menu
-                    id="menu-appbar"
                     anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
                     open={open}
                     onClose={handleMenuClose}
                   >
                     <MenuItem disabled>
-                      <Typography variant="body2" color="textSecondary">
-                        Signed in as
+                      <Typography variant="body2" fontWeight="bold">
+                        {user.email}
                       </Typography>
-                    </MenuItem>
-                    <MenuItem disabled>
-                      <Typography variant="body2">{user.email}</Typography>
                     </MenuItem>
                     <MenuItem disabled>
                       <Typography
                         variant="body2"
-                        color="primary"
                         sx={{ textTransform: "capitalize" }}
                       >
                         {user.role}
                       </Typography>
                     </MenuItem>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    <MenuItem
+                      onClick={handleLogout}
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      Logout
+                    </MenuItem>
                   </Menu>
-                </>
-              ) : (
-                <>
-                  <Button
-                    color="inherit"
-                    component={Link}
-                    to="/login"
-                    sx={{ mr: 1 }}
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    component={Link}
-                    to="/register"
-                  >
-                    Sign Up
-                  </Button>
                 </>
               )}
             </Toolbar>
           </Container>
         </AppBar>
+      </ElevationScroll>
 
-        <Box sx={{ flexGrow: 1 }}>
-          <Routes>
-            {!user ? (
-              <>
-                <Route path="/" element={<LandingPage />} />
-                <Route
-                  path="/login"
-                  element={<Login setUser={setUser} setToken={setToken} />}
-                />
-                <Route path="/register" element={<Register />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </>
-            ) : user.role === "patient" ? (
-              <>
-                <Route
-                  path="/dashboard"
-                  element={<PatientDashboard token={token} user={user} />}
-                />
-                <Route
-                  path="/submit"
-                  element={<PatientClaimForm token={token} user={user} />}
-                />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
-              </>
-            ) : (
-              <>
-                <Route
-                  path="/dashboard"
-                  element={<InsurerDashboard token={token} user={user} />}
-                />
-                <Route
-                  path="/review/:id"
-                  element={<ClaimReviewPanel token={token} user={user} />}
-                />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
-              </>
-            )}
-          </Routes>
-        </Box>
+      {/* Main Content */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          pt: "80px",
+          minHeight: "100vh",
+          // Only apply dark background to landing page
+          ...(isLandingPage && { backgroundColor: "#1A1A1A", color: "#fff" }),
+        }}
+      >
+        <Routes>
+          {!user ? (
+            <>
+              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="/login"
+                element={<AuthPage setUser={setUser} setToken={setToken} />}
+              />
+              <Route
+                path="/register"
+                element={<AuthPage setUser={setUser} setToken={setToken} />}
+              />
+              <Route path="*" element={<Navigate to="/" />} />
+            </>
+          ) : user.role === "patient" ? (
+            <>
+              <Route
+                path="/dashboard"
+                element={<PatientDashboard token={token} user={user} />}
+              />
+              <Route
+                path="/submit"
+                element={<PatientClaimForm token={token} user={user} />}
+              />
+              <Route path="*" element={<Navigate to="/dashboard" />} />
+            </>
+          ) : (
+            <>
+              <Route
+                path="/dashboard"
+                element={<InsurerDashboard token={token} user={user} />}
+              />
+              <Route
+                path="/review/:id"
+                element={<ClaimReviewPanel token={token} user={user} />}
+              />
+              <Route path="*" element={<Navigate to="/dashboard" />} />
+            </>
+          )}
+        </Routes>
       </Box>
-    </ThemeProvider>
+    </>
   );
 }
 

@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-
-
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -70,3 +68,58 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
+
+/* Add this to your global CSS file or App.js */
+
+body {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* For better input field styling */
+.MuiOutlinedInput-root {
+  transition: all 0.3s ease-in-out !important;
+}
+
+.MuiOutlinedInput-root:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Button animations */
+.MuiButton-root {
+  transition: all 0.3s ease-in-out !important;
+}
+
+.MuiButton-contained:hover {
+  transform: translateY(-3px);
+}
+
+.MuiButton-contained:active {
+  transform: translateY(-1px);
+}
