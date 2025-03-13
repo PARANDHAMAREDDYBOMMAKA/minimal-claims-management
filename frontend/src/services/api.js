@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://minimal-claims-management.onrender.com",
 });
 
 // 🔥 Interceptor: Attach Token to Every Request

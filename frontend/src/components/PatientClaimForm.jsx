@@ -533,7 +533,7 @@ function PatientClaimForm() {
                   </Grid>
                   <Grid item xs={8}>
                     <Typography variant="body1" fontWeight="medium">
-                      ${Number(claimDetails.claimAmount).toFixed(2)}
+                      ₹{Number(claimDetails.claimAmount).toFixed(2)}
                     </Typography>
                   </Grid>
 

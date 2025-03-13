@@ -177,7 +177,7 @@ function ClaimReviewPanel({ token }) {
   }
 
   return (
-    <Box sx={{ maxWidth: 900, margin: "auto", mt: 4, px: isMobile ? 2 : 4 }}>
+    <Box sx={{ maxWidth: 900, margin: "auto", mt: 4, px: isMobile ? 2 : 4, py: isMobile ? 2 : 4 }}>
       <Box display="flex" alignItems="center" mb={3}>
         <IconButton
           onClick={() => navigate("/dashboard")}
@@ -464,7 +464,7 @@ function ClaimReviewPanel({ token }) {
             <CloseIcon />
           </IconButton>
           <iframe
-            src={`http://localhost:3000/uploads/${claim.document}`}
+            src={`https://minimal-claims-management.onrender.com/uploads/${claim.document}`}
             style={{ width: "100%", height: "100%", border: "none" }}
             title="Document Viewer"
           />

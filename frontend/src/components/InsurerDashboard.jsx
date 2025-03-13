@@ -179,7 +179,7 @@ function InsurerDashboard({ token }) {
               sx={{
                 borderRadius: 3,
                 p: 1,
-                backgroundColor: "rgba(25, 118, 210, 0.1)",
+                backgroundColor: "white",
                 border: "1px solid rgba(25, 118, 210, 0.2)",
               }}
             >
@@ -216,7 +216,7 @@ function InsurerDashboard({ token }) {
               sx={{
                 borderRadius: 3,
                 p: 1,
-                backgroundColor: "rgba(255, 152, 0, 0.1)",
+                backgroundColor: "white",
                 border: "1px solid rgba(255, 152, 0, 0.2)",
               }}
             >
@@ -257,7 +257,7 @@ function InsurerDashboard({ token }) {
               sx={{
                 borderRadius: 3,
                 p: 1,
-                backgroundColor: "rgba(76, 175, 80, 0.1)",
+                backgroundColor: "white",
                 border: "1px solid rgba(76, 175, 80, 0.2)",
               }}
             >
@@ -298,7 +298,7 @@ function InsurerDashboard({ token }) {
               sx={{
                 borderRadius: 3,
                 p: 1,
-                backgroundColor: "rgba(244, 67, 54, 0.1)",
+                backgroundColor: "white",
                 border: "1px solid rgba(244, 67, 54, 0.2)",
               }}
             >
