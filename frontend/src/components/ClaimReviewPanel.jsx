@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CircularProgress,
-  Paper,
   Chip,
   Grid,
   Divider,
@@ -17,7 +16,6 @@ import {
   StepLabel,
   Avatar,
   IconButton,
-  Tooltip,
   Alert,
   Backdrop,
   useTheme,
@@ -46,19 +44,19 @@ function ClaimReviewPanel({ token }) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [viewingDocument, setViewingDocument] = useState(false);
+  const [documentData, setDocumentData] = useState(null);
   const [formData, setFormData] = useState({
     status: "",
     approvedAmount: "",
     insurerComments: "",
   });
 
-  // Status helpers
+  // Determine the step in the stepper based on claim status
   const getStatusStep = (status) => {
     switch (status) {
       case "Pending":
         return 0;
       case "Approved":
-        return 1;
       case "Rejected":
         return 1;
       default:
@@ -66,6 +64,7 @@ function ClaimReviewPanel({ token }) {
     }
   };
 
+  // Determine the color of the status chip based on claim status
   const getStatusColor = (status) => {
     switch (status) {
       case "Pending":
@@ -79,6 +78,7 @@ function ClaimReviewPanel({ token }) {
     }
   };
 
+  // Fetch claim details when component mounts
   useEffect(() => {
     const fetchClaim = async () => {
       try {
@@ -96,7 +96,6 @@ function ClaimReviewPanel({ token }) {
           });
         }
       } catch (err) {
-        console.error("Error fetching claim:", err);
         toast.error("Failed to load claim details.");
       } finally {
         setLoading(false);
@@ -106,17 +105,19 @@ function ClaimReviewPanel({ token }) {
     fetchClaim();
   }, [id, token]);
 
+  // Handle input changes
   const handleChange = (e) => {
     let { name, value } = e.target;
 
     if (name === "approvedAmount") {
-      value = value.replace(/[^0-9.]/g, ""); // Allow only numbers & dots
-      value = value ? parseFloat(value) : ""; // Convert to number if valid
+      value = value.replace(/[^0-9.]/g, "");
+      value = value ? parseFloat(value) : "";
     }
 
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -135,7 +136,7 @@ function ClaimReviewPanel({ token }) {
         approvedAmount:
           formData.status === "Approved"
             ? Number(formData.approvedAmount)
-            : null, // Ensure correct format
+            : null,
       };
 
       await axios.put(`/claims/${id}`, payload, {
@@ -149,14 +150,35 @@ function ClaimReviewPanel({ token }) {
       setSubmitting(false);
       navigate("/dashboard");
     } catch (err) {
-      console.error("Error updating claim:", err);
       toast.error(err.response?.data?.message || "Failed to update claim.");
       setSubmitting(false);
     }
   };
 
-  const handleViewDocument = () => {
-    setViewingDocument(true);
+  // Handle viewing the supporting document
+  const handleViewDocument = async () => {
+    try {
+      if (!claim.document) {
+        toast.error("No document attached to this claim.");
+        return;
+      }
+
+      const response = await axios.get(`/claims/${id}/document`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob",
+      });
+
+      const documentUrl = URL.createObjectURL(response.data);
+      setDocumentData(documentUrl);
+      setViewingDocument(true);
+
+      const contentType = response.headers["content-type"];
+      if (contentType?.includes("image/")) {
+        // Handle image document
+      }
+    } catch (error) {
+      toast.error("Failed to load document. Please try again.");
+    }
   };
 
   if (loading) {
@@ -177,7 +199,16 @@ function ClaimReviewPanel({ token }) {
   }
 
   return (
-    <Box sx={{ maxWidth: 900, margin: "auto", mt: 4, px: isMobile ? 2 : 4, py: isMobile ? 2 : 4 }}>
+    <Box
+      sx={{
+        maxWidth: 900,
+        margin: "auto",
+        mt: 4,
+        px: isMobile ? 2 : 4,
+        py: isMobile ? 2 : 4,
+      }}
+    >
+      {/* Back button and title */}
       <Box display="flex" alignItems="center" mb={3}>
         <IconButton
           onClick={() => navigate("/dashboard")}
@@ -190,6 +221,7 @@ function ClaimReviewPanel({ token }) {
         </Typography>
       </Box>
 
+      {/* Stepper to show claim progress */}
       <Stepper
         activeStep={getStatusStep(formData.status)}
         alternativeLabel
@@ -215,6 +247,7 @@ function ClaimReviewPanel({ token }) {
               </Typography>
               <Divider sx={{ mb: 2 }} />
 
+              {/* Claimant information */}
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: theme.palette.primary.light, mr: 2 }}>
                   <PersonIcon />
@@ -229,6 +262,7 @@ function ClaimReviewPanel({ token }) {
                 </Box>
               </Box>
 
+              {/* Contact email */}
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: theme.palette.primary.light, mr: 2 }}>
                   <EmailIcon />
@@ -243,6 +277,7 @@ function ClaimReviewPanel({ token }) {
                 </Box>
               </Box>
 
+              {/* Requested amount */}
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: theme.palette.primary.light, mr: 2 }}>
                   <CurrencyRupeeIcon />
@@ -261,6 +296,7 @@ function ClaimReviewPanel({ token }) {
                 </Box>
               </Box>
 
+              {/* Description */}
               <Box sx={{ display: "flex", alignItems: "flex-start", mb: 2 }}>
                 <Avatar sx={{ bgcolor: theme.palette.primary.light, mr: 2 }}>
                   <CommentIcon />
@@ -277,6 +313,7 @@ function ClaimReviewPanel({ token }) {
 
               <Divider sx={{ my: 2 }} />
 
+              {/* Current status */}
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Avatar sx={{ bgcolor: theme.palette.primary.light, mr: 2 }}>
                   <ReceiptIcon />
@@ -293,6 +330,7 @@ function ClaimReviewPanel({ token }) {
                 </Box>
               </Box>
 
+              {/* View supporting document button */}
               {claim.document && (
                 <Button
                   variant="outlined"
@@ -317,6 +355,7 @@ function ClaimReviewPanel({ token }) {
               </Typography>
               <Divider sx={{ mb: 3 }} />
 
+              {/* Form to update claim status */}
               <form onSubmit={handleSubmit}>
                 <TextField
                   select
@@ -438,7 +477,14 @@ function ClaimReviewPanel({ token }) {
       <Backdrop
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={viewingDocument}
-        onClick={() => setViewingDocument(false)}
+        onClick={() => {
+          setViewingDocument(false);
+          // Clean up object URL when done to avoid memory leaks
+          if (documentData) {
+            URL.revokeObjectURL(documentData);
+            setDocumentData(null);
+          }
+        }}
       >
         <Box
           sx={{
@@ -459,15 +505,24 @@ function ClaimReviewPanel({ token }) {
               top: 8,
               bgcolor: "rgba(0,0,0,0.04)",
             }}
-            onClick={() => setViewingDocument(false)}
+            onClick={() => {
+              setViewingDocument(false);
+              // Clean up object URL when done
+              if (documentData) {
+                URL.revokeObjectURL(documentData);
+                setDocumentData(null);
+              }
+            }}
           >
             <CloseIcon />
           </IconButton>
-          <iframe
-            src={`https://minimal-claims-management.onrender.com/uploads/${claim.document}`}
-            style={{ width: "100%", height: "100%", border: "none" }}
-            title="Document Viewer"
-          />
+          {documentData && (
+            <img
+              src={documentData}
+              style={{ width: "100%", height: "100%", border: "none" }}
+              title="Document Viewer"
+            />
+          )}
         </Box>
       </Backdrop>
     </Box>

@@ -48,6 +48,7 @@ function InsurerDashboard({ token }) {
     totalAmount: 0,
   });
 
+  // Fetch claims data from the server
   const fetchClaims = async () => {
     setLoading(true);
     try {
@@ -58,7 +59,6 @@ function InsurerDashboard({ token }) {
       let data = response.data.claims || [];
 
       if (!Array.isArray(data)) {
-        console.error("Expected an array but got:", data);
         data = [];
       }
 
@@ -90,7 +90,6 @@ function InsurerDashboard({ token }) {
 
       setClaims(data);
     } catch (error) {
-      console.error("Error fetching claims:", error);
       toast.error("Failed to fetch claims.");
       setClaims([]);
     } finally {

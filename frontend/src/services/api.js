@@ -1,12 +1,13 @@
-import { getToken } from "../context/AuthContext"; // ✅ Only import `getToken`
+import { getToken } from "../context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Create an axios instance with a base URL
 const api = axios.create({
-  baseURL: "https://minimal-claims-management.onrender.com",
+  baseURL: "http://localhost:3000",
 });
 
-// 🔥 Interceptor: Attach Token to Every Request
+// Add a request interceptor to include the authorization token in headers
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
@@ -16,14 +17,11 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 🔥 Interceptor: Handle API Errors
+// Add a response interceptor to handle responses and errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("API Error:", error);
     toast.error(error.response?.data?.message || "Something went wrong");
-
-    // ✅ Let components handle logout using useAuth()
     return Promise.reject(error);
   }
 );

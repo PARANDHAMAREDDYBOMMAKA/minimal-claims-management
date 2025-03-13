@@ -25,7 +25,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
             message: typeof message === 'object' ? message : { message },
         };
 
-        console.error(`Error at ${request.url}:`, exception);
 
         response.status(status).json(responseBody);
     }

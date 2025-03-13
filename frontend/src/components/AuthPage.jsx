@@ -9,7 +9,6 @@ import {
   Container,
   InputAdornment,
   IconButton,
-  Card,
   Stepper,
   Step,
   StepLabel,
@@ -53,6 +52,7 @@ const AuthPage = ({ setUser, setToken }) => {
   };
 
   return (
+  // Container for the login and register forms
     <Container
       maxWidth="sm"
       sx={{
@@ -106,6 +106,8 @@ const AuthPage = ({ setUser, setToken }) => {
   );
 };
 
+// Glassmorphic card component for login and register forms
+
 const GlassmorphicCard = ({ children }) => (
   <Box
     sx={{
@@ -123,6 +125,7 @@ const GlassmorphicCard = ({ children }) => (
   </Box>
 );
 
+// Login and Register forms
 const LoginForm = ({ setUser, setToken, onSwitchForm }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -152,9 +155,8 @@ const LoginForm = ({ setUser, setToken, onSwitchForm }) => {
 
       // Show success animation before redirecting
       toast.success("Login successful!");
-      setTimeout(() => navigate("/dashboard"), 1000);
+      setTimeout(() => navigate("/dashboard"), 900);
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.message || "Invalid credentials");
     } finally {
       setLoading(false);
@@ -162,6 +164,7 @@ const LoginForm = ({ setUser, setToken, onSwitchForm }) => {
   };
 
   return (
+    // Glassmorphic card for login form
     <GlassmorphicCard>
       <Box sx={{ textAlign: "center", mb: 4 }}>
         <motion.div
@@ -324,6 +327,8 @@ const LoginForm = ({ setUser, setToken, onSwitchForm }) => {
   );
 };
 
+// Register form component
+
 const RegisterForm = ({ onSwitchForm }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({
@@ -406,12 +411,6 @@ const RegisterForm = ({ onSwitchForm }) => {
 
     try {
       const { name, email, password, role } = formData;
-      console.log("Sending registration data:", {
-        name,
-        email,
-        password,
-        role,
-      });
 
       const response = await axios.post("/users/register", {
         name,
@@ -420,11 +419,9 @@ const RegisterForm = ({ onSwitchForm }) => {
         role,
       });
 
-      console.log("Registration success:", response.data);
       toast.success("Registration successful! Redirecting to login...");
       setTimeout(() => onSwitchForm(), 2000);
     } catch (err) {
-      console.error("Registration error:", err);
       toast.error(
         err.response?.data?.message || "Registration failed. Try again."
       );
@@ -504,6 +501,7 @@ const RegisterForm = ({ onSwitchForm }) => {
             </motion.div>
           </>
         );
+        // Password and role fields for step 1
       case 1:
         return (
           <>
@@ -631,6 +629,7 @@ const RegisterForm = ({ onSwitchForm }) => {
             </motion.div>
           </>
         );
+      // Review form data for step 2
       case 2:
         return (
           <motion.div
@@ -664,11 +663,13 @@ const RegisterForm = ({ onSwitchForm }) => {
             </Box>
           </motion.div>
         );
+        // Default case for unknown step
       default:
         return "Unknown step";
     }
   };
 
+  // Main return block
   return (
     <GlassmorphicCard>
       <Box sx={{ textAlign: "center", mb: 3 }}>

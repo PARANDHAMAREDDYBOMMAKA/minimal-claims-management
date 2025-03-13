@@ -10,12 +10,14 @@ export const AuthProvider = ({ children }) => {
     if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
+  // Login function to store user and token in localStorage
   const login = (userData, token) => {
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", token);
     setUser(userData);
   };
 
+  // Logout function to remove user and token from localStorage
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// Hook to use the AuthContext
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -37,9 +40,7 @@ export const useAuth = () => {
   return context;
 };
 
-// ✅ Fix: Remove incorrect named export for `logout`
-// ❌ export { logout };  // REMOVE THIS LINE
-
 export const getToken = () => localStorage.getItem("token");
+
 export const getUserRole = () =>
   JSON.parse(localStorage.getItem("user"))?.role || null;

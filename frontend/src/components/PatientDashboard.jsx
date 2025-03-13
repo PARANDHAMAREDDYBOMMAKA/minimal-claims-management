@@ -30,7 +30,7 @@ import {
   LocalHospital,
   Add,
 } from "@mui/icons-material";
-import { motion } from "framer-motion"; // Added for animations
+import { motion } from "framer-motion";
 
 function PatientDashboard() {
   const { user } = useAuth();
@@ -63,6 +63,7 @@ function PatientDashboard() {
     },
   };
 
+  // Fetch claims data on component mount
   useEffect(() => {
     const fetchClaims = async () => {
       try {
@@ -88,7 +89,6 @@ function PatientDashboard() {
           throw new Error("Invalid response format from server");
         }
       } catch (error) {
-        console.error("Error fetching claims:", error);
         toast.error("Failed to fetch claims. Please try again.");
       } finally {
         setLoading(false);
@@ -98,6 +98,7 @@ function PatientDashboard() {
     fetchClaims();
   }, []);
 
+  // If user is not authenticated, show login prompt
   if (!user) {
     return (
       <motion.div
@@ -139,6 +140,7 @@ function PatientDashboard() {
     );
   }
 
+  // Function to get status chip with appropriate color and icon
   const getStatusChip = (status) => {
     const statusMap = {
       Pending: { color: "warning", icon: <Event /> },
@@ -219,7 +221,7 @@ function PatientDashboard() {
                       bgcolor: "#e3f2fd",
                       height: "100%",
                       transition:
-                        "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                        "transform 0.3s ease-in-out, boxShadow 0.3s ease-in-out",
                       "&:hover": {
                         transform: "translateY(-5px)",
                         boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
@@ -242,7 +244,7 @@ function PatientDashboard() {
                       bgcolor: "#fff8e1",
                       height: "100%",
                       transition:
-                        "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                        "transform 0.3s ease-in-out, boxShadow 0.3s ease-in-out",
                       "&:hover": {
                         transform: "translateY(-5px)",
                         boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
@@ -265,7 +267,7 @@ function PatientDashboard() {
                       bgcolor: "#e8f5e9",
                       height: "100%",
                       transition:
-                        "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
+                        "transform 0.3s ease-in-out, boxShadow 0.3s ease-in-out",
                       "&:hover": {
                         transform: "translateY(-5px)",
                         boxShadow: "0 8px 20px rgba(0,0,0,0.12)",
@@ -290,7 +292,7 @@ function PatientDashboard() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 component={Link}
-                to="/submit"
+                to="/submit-claim"
                 variant="contained"
                 color="primary"
                 startIcon={<Add />}
@@ -358,9 +360,6 @@ function PatientDashboard() {
                             Approved Amount
                           </Typography>
                         </TableCell>
-                        <TableCell align="center">
-                          <Typography variant="subtitle2">Actions</Typography>
-                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -393,23 +392,6 @@ function PatientDashboard() {
                             {claim.approvedAmount
                               ? `₹${claim.approvedAmount}`
                               : "-"}
-                          </TableCell>
-                          <TableCell align="center">
-                            <Button
-                              component={Link}
-                              to={`/claims/${claim._id}`}
-                              size="small"
-                              color="primary"
-                              sx={{
-                                borderRadius: "16px",
-                                transition: "transform 0.2s ease-in-out",
-                                "&:hover": {
-                                  transform: "scale(1.05)",
-                                },
-                              }}
-                            >
-                              View Details
-                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}

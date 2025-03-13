@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { AccountCircle, Dashboard } from "@mui/icons-material";
 
-// Scroll-triggered shrink effect
+// Function to handle elevation scroll effect for the AppBar
 function ElevationScroll({ children }) {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
@@ -33,9 +33,7 @@ function ElevationScroll({ children }) {
     sx: {
       transition: "all 0.3s ease",
       backdropFilter: "blur(12px)",
-      backgroundColor: trigger
-        ? "rgba(255, 255, 255, 0.2)" // Background on scroll
-        : "transparent", // Fully transparent at start
+      backgroundColor: trigger ? "rgba(255, 255, 255, 0.2)" : "transparent",
       padding: trigger ? "8px 0" : "16px 0",
       boxShadow: trigger ? "0px 4px 12px rgba(0, 0, 0, 0.1)" : "none",
     },
@@ -49,9 +47,8 @@ function App() {
   const [isHovered, setIsHovered] = useState(false);
   const open = Boolean(anchorEl);
 
-  const location = useLocation(); // Get current route
+  const location = useLocation();
 
-  // Define background only for landing page
   const isLandingPage = location.pathname === "/";
 
   useEffect(() => {
@@ -63,6 +60,7 @@ function App() {
     }
   }, []);
 
+  // Function to handle user logout
   const handleLogout = () => {
     setUser(null);
     setToken(null);
@@ -71,10 +69,12 @@ function App() {
     handleMenuClose();
   };
 
+  // Function to handle menu open
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  // Function to handle menu close
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -171,7 +171,7 @@ function App() {
                     <Button
                       color="inherit"
                       component={Link}
-                      to="/submit"
+                      to="/submit-claim"
                       sx={{ mr: 2 }}
                     >
                       Submit Claim
@@ -252,7 +252,7 @@ function App() {
                 element={<PatientDashboard token={token} user={user} />}
               />
               <Route
-                path="/submit"
+                path="/submit-claim"
                 element={<PatientClaimForm token={token} user={user} />}
               />
               <Route path="*" element={<Navigate to="/dashboard" />} />

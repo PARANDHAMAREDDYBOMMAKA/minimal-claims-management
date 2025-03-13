@@ -9,10 +9,10 @@ import { UpdateClaimDto } from './dto/update-claim.dto';
 export class ClaimsService {
     constructor(@InjectModel(Claim.name) private claimModel: Model<ClaimDocument>) { }
 
-    async create(createClaimDto: CreateClaimDto, documentPath?: string): Promise<Claim> {
+    async create(createClaimDto: CreateClaimDto, documentFilename?: string): Promise<Claim> {
         const newClaim = new this.claimModel({
             ...createClaimDto,
-            document: documentPath || null,
+            document: documentFilename || null,
             status: 'Pending',
         });
         return newClaim.save();

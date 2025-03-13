@@ -46,7 +46,7 @@ function FAQ() {
   const [expanded, setExpanded] = useState(null);
 
   const handleChange = (index) => (event, isExpanded) => {
-    setExpanded(isExpanded ? index : null); // Close previous when opening a new one
+    setExpanded(isExpanded ? index : null);
   };
 
   return (

@@ -16,9 +16,8 @@ export class Claim {
 
     @Prop({ required: true })
     description: string;
-
-    @Prop()
-    document?: string;
+    @Prop({ required: true })
+    document: string;
 
     @Prop({ default: 'Pending', enum: ['Pending', 'Approved', 'Rejected'] })
     status: string;

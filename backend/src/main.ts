@@ -12,9 +12,25 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
 
-  app.enableCors();
+  // Allow images, PDFs, and other files to be loaded from your domain
+  app.use(
+    helmet.default({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          imgSrc: ["'self'", "data:"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          // Add connect-src if you're making API calls
+          connectSrc: ["'self'"],
+        },
+      },
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      crossOriginEmbedderPolicy: false,
+    })
+  );
 
-  app.use(helmet.default());
+  app.enableCors();
 
   app.use(
     rateLimit({
@@ -41,9 +57,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
-
   const port = configService.port;
   await app.listen(port);
-  console.log(`Server running on http://localhost:${port}`);
 }
 bootstrap();
