@@ -1,66 +1,84 @@
-# Minimal Claims Management Platform
+# 🚀 Minimal Claims Management Platform  
 
-This project is a minimal claims management platform designed for both patients and insurers. It allows patients to submit and track claims, while insurers can review and manage these claims.
+A **lightweight and efficient claims management platform** designed for both **patients** and **insurers**.  
+Patients can **submit and track claims**, while insurers can **review and manage claims** seamlessly.  
 
-## Features
+🔗 **Live Demo**: [Minimal Claims Management Platform](https://minimal-claims.vercel.app/)  
 
-### Patient Side
-- **Submit a Claim**: A form to capture Name, Email, Claim Amount, Description, and upload a document (e.g., receipt or prescription).
-- **View Claims**: A dashboard displaying submitted claims with status (Pending, Approved, Rejected), submission date, and approved amount (if applicable).
+## 🛠 Tech Stack  
 
-### Insurer Side
-- **Claims Dashboard**: View all submitted claims with filters for status (Pending, Approved, Rejected), date, and claim amount.
-- **Manage Claims**: A review panel to view claim details and uploaded documents, update claim status (Approve/Reject) with approved amount, and leave comments.
+| Technology | Usage |
+|------------|-------|
+| **Frontend** | React.js (for a responsive UI), Tailwind CSS, MUI |
+| **Backend** | Node.js (NestJS) |
+| **Database** | MongoDB |
 
-### Shared Features
-- **Authentication**: Basic login for patients and insurers.
-- **API Development**: Endpoints for submitting, fetching, and updating claims.
-- **Database**: Store claims with fields such as ID, Name, Email, Claim Amount, Description, Status, Submission Date, and Insurer Comments.
+---
 
-## Tech Stack
-- **Frontend**: React.js
-- **Backend**: Node.js (NestJS)
-- **Database**: MongoDB
+## 📌 Features  
 
-## Getting Started
+### 👩‍⚕️ Patient Side  
+✅ **Submit a Claim**: Fill in details like **Name, Email, Claim Amount, Description**, and upload a document (e.g., receipt or prescription).  
+✅ **View Claims**: Dashboard to **track claim status** (*Pending, Approved, Rejected*), see submission date, and view **approved amounts** (if applicable).  
 
-### Prerequisites
-- Node.js
-- npm or yarn
-- MongoDB
+### 🏦 Insurer Side  
+✅ **Claims Dashboard**: View all submitted claims with **filters** for **status, date, and claim amount**.  
+✅ **Manage Claims**: A review panel to:  
+   - View **claim details & uploaded documents**  
+   - **Approve/Reject** claims  
+   - Assign an **approved amount**  
+   - Leave **comments**  
 
-### Installation
+### 🔄 Shared Features  
+✅ **Authentication**: Basic login system for **patients and insurers**.  
+✅ **API Development**: RESTful API endpoints for **submitting, fetching, and updating claims**.  
+✅ **Database**: Stores claims with details such as **ID, Name, Email, Claim Amount, Status, Submission Date, and Insurer Comments**.  
 
-1. Clone the repository:
+---
+
+## 🚀 Getting Started  
+
+### 🔹 Prerequisites  
+Ensure you have the following installed:  
+- [Node.js](https://nodejs.org/)  
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)  
+- [MongoDB](https://www.mongodb.com/)  
+
+### 🔹 Installation  
+
+1. **Clone the repository**  
     ```sh
-    git clone https://github.com/PARANDHAMAREDDYBOMMAKA/minimal-claims-management
+    git clone https://github.com/PARANDHAMAREDDYBOMMAKA/minimal-claims-management.git
     cd minimal-claims-management
     ```
 
-2. Set up the backend:
+2. **Set up the backend**  
     ```sh
     cd backend
     npm install
     ```
 
-3. Set up the frontend:
+3. **Set up the frontend**  
     ```sh
     cd ../frontend
     npm install
     ```
 
-### Configuration
+---
 
-1. Backend:
-    - Create a `.env` file in the `backend` directory and add the following environment variables:
-        ```env
-        MONGO_URI=mongodb://localhost:27017/claims-management
-        JWT_SECRET=your_jwt_secret
-        JWT_EXPIRES_IN=1d
-        PORT=3000
-        ```
+## ⚙️ Configuration  
 
-### Running the Application
+### 🔹 Backend  
+Create a **`.env`** file inside the `backend` directory and add the following environment variables:  
+
+```env
+MONGO_URI=mongodb://localhost:27017/claims-management
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=1d
+PORT=3000
+```
+
+### ▶️ Running the Application
 
 1. Start the backend server:
     ```sh
